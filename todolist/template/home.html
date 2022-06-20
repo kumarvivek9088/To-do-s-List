@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&display=swap" rel="stylesheet">
+<style>
+body {
+    background: radial-gradient(50% 123.47% at 50% 50%, #00ff94 0%, #720059 100%),
+    linear-gradient(121.28deg, #669600 0%, #ff0000 100%),
+    linear-gradient(360deg, #0029ff 0%, #8fff00 100%),
+    radial-gradient(100% 164.72% at 100% 100%, #6100ff 0%, #00ff57 100%),
+    radial-gradient(100% 148.07% at 0% 0%, #fff500 0%, #51d500 100%);
+    background-blend-mode: screen, color-dodge, overlay, difference, normal;
+    font-family: 'Mochiy Pop P one';
+    margin: 0%;
+}
+
+/* Include the padding and border in an element's total width and height */
+* {
+  box-sizing: border-box;
+}
+
+/* Remove margins and padding from the list */
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+/* Style the list items */
+ul li {
+  cursor: pointer;
+  position: relative;
+  padding: 12px 8px 12px 40px;
+  list-style-type: none;
+  background: #eee;
+  font-size: 18px;
+  transition: 0.2s;
+  
+  /* make the list items unselectable */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Set all odd list items to a different color (zebra-stripes) */
+ul li:nth-child(odd) {
+  background: #f9f9f9;
+}
+
+/* Darker background-color on hover */
+ul li:hover {
+  background: #ddd;
+}
+
+/* When clicked on, add a background color and strike out text */
+ul li.checked {
+  background: #888;
+  color: #fff;
+  text-decoration: line-through;
+}
+
+/* Add a "checked" mark when clicked on */
+ul li.checked::before {
+  content: '';
+  position: absolute;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 0 2px 2px 0;
+  top: 10px;
+  left: 16px;
+  transform: rotate(45deg);
+  height: 15px;
+  width: 7px;
+}
+
+/* Style the close button */
+.close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 12px 16px 12px 16px;
+}
+
+.close:hover {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Style the header */
+.header {
+  background-color: #ececec;
+  padding: 30px 40px;
+  color: blue;
+  text-align: center;
+}
+
+/* Clear floats after the header */
+.header:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the input */
+input {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  width: 75%;
+  padding: 10px;
+  float: left;
+  font-size: 16px;
+}
+
+/* Style the "Add" button */
+.addBtn {
+  padding: 10px;
+  width: 25%;
+  background: #0905ee;
+  color: rgb(255, 250, 250);
+  float: left;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 0;
+}
+
+.addBtn:hover {
+  background-color: #bbb;
+}
+.container{
+    padding-left: 30%;
+    padding-right: 30%;
+    padding-top: 10%;
+  }
+  .logoutbtn{
+    background-color: red;
+    font-size: 20px;
+  
+  }
+  .logoutbtn:hover{
+    cursor: pointer;
+    background-color: rgb(182, 56, 56);
+  }
+  .navbar{
+    background-color:#333; 
+    overflow: hidden;
+  
+  }
+  .navbar button{
+    float: right;
+  }
+</style>
+</head>
+<body>
+  <div class="navbar">
+    <li style="list-style-type: none; color:white;">Hello {{request.user}} Welcome to ToDo's List Website</li>
+    <button onclick="location.href='/signout/'" class="logoutbtn">Logout</button>
+  </div>
+    <div class="container">
+<div id="myDIV" class="header">
+  <h2 style="margin:5px">My To Do List</h2>
+  <form method="post" action="/add/">
+      {% csrf_token %}
+  <input type="text" id="myInput" placeholder="Title..." name="title">
+  <button type="submit" class="addBtn">Add</button></form>
+</div>
+
+<ul id="myUL">
+    {% for task in tasks %}
+        {% if task.complete is not False %}
+            <li  onclick="location.href='/status/{{task.id}}'"  class="checked">
+                <span>{{task.title}} </span><br>
+                <span style="font-size:10px;">{{task.time}}</span>
+                <a href='/delete/{{task.id}}'" class="close">&#10006;</a>
+            </li>
+        {% else %}
+            <li onclick="location.href='/status/{{task.id}}'">
+                <span>{{task.title}} </span><br>
+                <span style="font-size:10px;">{{task.time}}</span>
+                <a href='/delete/{{task.id}}'"  class="close">&#10006;</a>
+                <a href="/edit/{{task.id}}" >&#9998;</a>
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>
+</div>
+
+</body>
+</html>
